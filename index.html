@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "5ac8b4ed6d314c12888c1b6b468170c3"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
 
 <head>
   <meta charset="UTF-8">
@@ -88,6 +95,13 @@
   </main>
 
   <script>
+
+    class NumericError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "Numeric Error";
+      }
+    }
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,14 +109,102 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try{
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } 
+      catch(err) {
+        if(err instanceof SyntaxError) {
+          alert("invalid input");
+        }
+        if(isNaN(firstNum)) {
+        throw new NumericError("the first number is an invalid number");
+        } 
+        if(isNaN(secondNum)) {
+          throw new NumericError("the second number is an invalid number");
+        }
+      } 
+      finally {
+        form.reset();
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
-
+    
     // Start your code here
     // You may move this JS to another file if you wish
+
+    errorBtns[0].addEventListener('click', () => {
+      console.log("Console log demo");
+    });
+
+    errorBtns[1].addEventListener('click', () => {
+      console.error("Console error demo");
+    });
+
+    errorBtns[2].addEventListener('click', () => {
+      console.count();
+    });
+
+    errorBtns[3].addEventListener('click', () => {
+      console.warn("Console warn demo")
+    });
+
+    errorBtns[4].addEventListener('click', () => {
+      console.assert(5 > 6, "Assertion failed: 5 is not more than 6")
+    });
+
+    errorBtns[5].addEventListener('click', () => {
+      console.clear();
+    });
+
+    errorBtns[6].addEventListener('click', () => {
+      let number = new Number(25);
+      console.dir(number);
+    });
+
+    errorBtns[7].addEventListener('click', () => {
+      let number = new Number(25);
+      console.dirxml(number);
+    });
+
+    errorBtns[8].addEventListener('click', () => {
+      console.group("grouping started");
+    });
+
+    errorBtns[9].addEventListener('click', () => {
+      console.groupEnd();
+    });
+
+    errorBtns[10].addEventListener('click', () => {
+      let array = ["this", "is", "a", "demo", "of", "console", "table"];
+      console.table(array);
+    });
+
+    errorBtns[11].addEventListener('click', () => {
+      console.time("timer");
+    });
+
+    errorBtns[12].addEventListener('click', () => {
+      console.timeEnd("timer");
+    });
+
+    errorBtns[13].addEventListener('click', () => {
+      console.trace();
+    });
+
+    window.onerror = function (errorMsg,lineNumber) {
+    alert('Error: ' + errorMsg + ' At line: ' + lineNumber);
+    }
+    errorBtns[14].addEventListener('click', () => {
+      boom
+      if(window.onerror) {
+        console.log("an error has in fact occurred");
+      }
+    });
+    TrackJS.track('Testing TrackJS!');
+                        
   </script>
+                          
 </body>
 
 </html>
